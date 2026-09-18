@@ -15,6 +15,19 @@ from scisense import run_scisense
 from scisense.llm_layer import DEFAULT_MODEL, groq_completion
 from scisense.pipeline import NOISE_CONTROL, numeric_columns, plot_results
 
+# Hugging Face's ZeroGPU hardware will not start a Space unless at least one
+# function is decorated with @spaces.GPU. SciSense runs entirely on CPU
+# (scikit-learn GP fitting, LLM calls over HTTP), so this no-op exists only to
+# satisfy that startup check. Locally, where `spaces` is not installed, it is skipped.
+try:
+    import spaces
+
+    @spaces.GPU
+    def _zerogpu_startup_check() -> None:
+        return None
+except ImportError:
+    pass
+
 EXAMPLE_CSV = os.path.join(os.path.dirname(__file__), "data", "tc_dataset_1200_updated.csv")
 EXAMPLE_TARGET = "direct_t_c"
 EXAMPLE_NOTES = {
