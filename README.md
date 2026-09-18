@@ -58,10 +58,12 @@ Dataset: 1,200 synthetic samples generated from stochastic BCS equations ([Kaggl
 
 | Feature | Kernel | R² test | 95% coverage | Confidence | Gate |
 |---|---|---|---|---|---|
-| lambda_0 | | | | | |
-| mean_lambda | | | | | |
-| mean_t_c | | | | | |
-| random_noise_control | | | | | |
+| mean_lambda | RBF | 0.917 | 0.93 | 0.873 | PASS |
+| mean_t_c | RBF | 0.914 | 0.92 | 0.875 | PASS |
+| random_noise_control | Matérn 1.5 | -0.010 | 0.95 | 0.177 | BLOCKED |
+
+Held-out test split: 240 of 1,200 rows. The random-noise control is blocked (confidence 0.177 against a 0.75 threshold), which shows the gate rejects an uninformative feature. With 240 test points, coverage estimates carry roughly ±0.014 sampling error: mean_lambda (0.93) is consistent with nominal 95% coverage, mean_t_c (0.92) is slightly overconfident, and lambda_0 (1.00) is conservative because the relationship is almost noise-free.
+
 
 <!-- Fill this table from `python -m scisense.report data/tc_dataset_1200_updated.csv direct_t_c` -->
 
